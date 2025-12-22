@@ -3,27 +3,31 @@ import FormularioFactura from './components/FormularioFactura'
 import Dashboard from './components/Dashboard'
 import VerFacturas from './components/VerFacturas'
 import Login from './components/Login'
+import Toast from './components/Toast'
 import { facturasService } from './services/facturasService'
 import { useAuth } from './context/AuthContext'
+import { useToast } from './hooks/useToast'
 
 function App() {
   const { user, cargando: cargandoAuth, logout } = useAuth()
   const [vistaActual, setVistaActual] = useState('dashboard')
   const [facturaEditando, setFacturaEditando] = useState(null)
-  const [error, setError] = useState(null)
+  const { toasts, hideToast, success, error: showError } = useToast()
 
   const handleGuardarFactura = async (factura) => {
     try {
       if (facturaEditando) {
         await facturasService.actualizarFactura(facturaEditando.id, factura)
+        success('✅ Factura actualizada exitosamente')
       } else {
         await facturasService.crearFactura(factura)
+        success('✅ Factura creada exitosamente')
       }
       
       setFacturaEditando(null)
       setVistaActual('ver-facturas')
     } catch (err) {
-      setError('Error al guardar la factura: ' + err.message)
+      showError('❌ Error al guardar la factura: ' + err.message)
       console.error(err)
     }
   }
@@ -46,7 +50,7 @@ function App() {
   }
 
   const handleLoginSuccess = (usuario) => {
-    // El AuthContext se actualiza automáticamente
+    success('👋 Bienvenido al sistema')
   }
 
   const handleLogout = async () => {
@@ -133,19 +137,6 @@ function App() {
           </div>
         </div>
 
-        {/* Mensaje de error */}
-        {error && (
-          <div className="mx-4 mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            <span className="block sm:inline">{error}</span>
-            <button
-              className="absolute top-0 bottom-0 right-0 px-4 py-3"
-              onClick={() => setError(null)}
-            >
-              <span className="text-2xl">&times;</span>
-            </button>
-          </div>
-        )}
-
         {/* Contenido dinámico según vista actual */}
         <div className="px-4">
           {vistaActual === 'dashboard' && (
@@ -165,6 +156,17 @@ function App() {
           )}
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      {toasts.map(toast => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={() => hideToast(toast.id)}
+        />
+      ))}
     </div>
   )
 }
