@@ -42,8 +42,14 @@ function FormularioFactura({ onGuardar, facturaEditando, onCancelar }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     
+    // Calcular estado_pago automáticamente
+    const todosLosItems = [...servicios, ...repuestos]
+    const todosPagados = todosLosItems.length > 0 && todosLosItems.every(item => item.pagado === true)
+    const estadoPagoCalculado = todosPagados ? 'pagado' : 'pendiente'
+    
     const datosParaEnviar = {
       ...formData,
+      estado_pago: estadoPagoCalculado,
       servicios: servicios.map(s => ({
         descripcion: s.descripcion,
         precio: parseFloat(s.precio) || 0,
@@ -159,23 +165,6 @@ function FormularioFactura({ onGuardar, facturaEditando, onCancelar }) {
                 placeholder="ABC-123"
                 maxLength="20"
               />
-            </div>
-
-            <div>
-              <label htmlFor="estado_pago" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Estado de Pago *
-              </label>
-              <select
-                id="estado_pago"
-                name="estado_pago"
-                value={formData.estado_pago}
-                onChange={handleChange}
-                required
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value="pendiente">Pendiente</option>
-                <option value="pagado">Pagado</option>
-              </select>
             </div>
 
             <div>
@@ -309,6 +298,18 @@ function FormularioFactura({ onGuardar, facturaEditando, onCancelar }) {
               <div className="flex justify-between">
                 <span>Repuestos:</span>
                 <span>₡{formatearMoneda(totalRepuestos)}</span>
+              </div>
+              <div className="flex justify-between items-center mt-2 pt-2 border-t border-blue-200 dark:border-blue-700">
+                <span className="font-semibold">Estado de Pago:</span>
+                <span className={`font-semibold ${
+                  [...servicios, ...repuestos].length > 0 && [...servicios, ...repuestos].every(item => item.pagado === true)
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-yellow-600 dark:text-yellow-400'
+                }`}>
+                  {[...servicios, ...repuestos].length > 0 && [...servicios, ...repuestos].every(item => item.pagado === true)
+                    ? '✓ Pagado'
+                    : '⏱ Pendiente'}
+                </span>
               </div>
             </div>
           </div>
