@@ -1,3 +1,5 @@
+import { facturasService } from '../services/facturasService'
+
 function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
   if (cargando) {
     return (
@@ -43,6 +45,13 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
     })
   }
 
+  const formatearMoneda = (valor) => {
+    return new Intl.NumberFormat('es-CR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(valor)
+  }
+
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
       <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
@@ -51,89 +60,129 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
         </h3>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Número
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Repuesto
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Servicio
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Total
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Estado
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Fecha
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {facturas.map((factura) => {
-              const total = (factura.precio_repuesto || 0) + (factura.precio_servicio || 0)
-              
-              return (
-                <tr key={factura.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {factura.numero_factura}
+      <div className="divide-y divide-gray-200">
+        {facturas.map((factura) => {
+          const totales = facturasService.calcularTotales(factura)
+          
+          return (
+            <div key={factura.id} className="p-6 hover:bg-gray-50">
+              {/* Header de la factura */}
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    🚗 {factura.placa}
+                  </h4>
+                  <div className="text-sm text-gray-600 space-y-1 mt-1">
+                    {factura.cliente_nombre && <p><strong>Cliente:</strong> {factura.cliente_nombre}</p>}
+                    {factura.cliente_cedula && <p><strong>Cédula:</strong> {factura.cliente_cedula}</p>}
+                    {factura.vehiculo && <p><strong>Vehículo:</strong> {factura.vehiculo}</p>}
+                    <p className="text-xs text-gray-500">
+                      {factura.fecha_creacion ? formatearFecha(factura.fecha_creacion) : '-'}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col items-end gap-2">
+                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                    factura.estado_pago === 'pagado'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {factura.estado_pago === 'pagado' ? 'Pagado' : 'Pendiente'}
+                  </span>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-blue-600">
+                      ₡{formatearMoneda(totales.totalGeneral)}
+                    </p>
+                    <p className="text-xs text-gray-500">Total</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Servicios */}
+              {factura.factura_servicios && factura.factura_servicios.length > 0 && (
+                <div className="mb-3">
+                  <h5 className="text-sm font-semibold text-gray-700 mb-2">Servicios:</h5>
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <ul className="space-y-1 text-sm">
+                      {factura.factura_servicios.map((servicio, idx) => (
+                        <li key={idx} className="flex justify-between">
+                          <span>
+                            {servicio.descripcion} 
+                            {servicio.cantidad > 1 && <span className="text-gray-600"> (x{servicio.cantidad})</span>}
+                          </span>
+                          <span className="font-semibold">
+                            ₡{formatearMoneda(servicio.precio * servicio.cantidad)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="border-t border-blue-200 mt-2 pt-2 flex justify-between font-semibold">
+                      <span>Subtotal Servicios:</span>
+                      <span>₡{formatearMoneda(totales.totalServicios)}</span>
                     </div>
-                    {factura.detalle && (
-                      <div className="text-sm text-gray-500 max-w-xs truncate">
-                        {factura.detalle}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${factura.precio_repuesto?.toFixed(2) || '0.00'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${factura.precio_servicio?.toFixed(2) || '0.00'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    ${total.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      factura.estado_pago === 'pagado'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {factura.estado_pago === 'pagado' ? 'Pagado' : 'Pendiente'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {factura.fecha_creacion ? formatearFecha(factura.fecha_creacion) : '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button
-                      onClick={() => onEditar(factura)}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => onEliminar(factura.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Repuestos */}
+              {factura.factura_repuestos && factura.factura_repuestos.length > 0 && (
+                <div className="mb-3">
+                  <h5 className="text-sm font-semibold text-gray-700 mb-2">Repuestos:</h5>
+                  <div className="bg-green-50 rounded-lg p-3">
+                    <ul className="space-y-1 text-sm">
+                      {factura.factura_repuestos.map((repuesto, idx) => (
+                        <li key={idx} className="flex justify-between items-start">
+                          <span className="flex-1">
+                            {repuesto.nombre}
+                            {repuesto.cantidad > 1 && <span className="text-gray-600"> (x{repuesto.cantidad})</span>}
+                            {repuesto.numero_factura && (
+                              <span className="block text-xs text-gray-500 mt-0.5">
+                                Factura: {repuesto.numero_factura}
+                              </span>
+                            )}
+                          </span>
+                          <span className="font-semibold ml-2">
+                            ₡{formatearMoneda(repuesto.precio_unitario * repuesto.cantidad)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="border-t border-green-200 mt-2 pt-2 flex justify-between font-semibold">
+                      <span>Subtotal Repuestos:</span>
+                      <span>₡{formatearMoneda(totales.totalRepuestos)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Observaciones */}
+              {factura.observaciones && (
+                <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                  <p className="text-sm text-gray-700">
+                    <strong>Observaciones:</strong> {factura.observaciones}
+                  </p>
+                </div>
+              )}
+
+              {/* Botones de acción */}
+              <div className="flex gap-2 mt-4 pt-3 border-t">
+                <button
+                  onClick={() => onEditar(factura)}
+                  className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => onEliminar(factura.id)}
+                  className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-medium"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
