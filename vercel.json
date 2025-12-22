@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
@@ -50,6 +55,10 @@
     }
   ],
   "github": {
-    "silent": true
-  }
+    "enabled": true,
+    "autoAlias": true,
+    "silent": false
+  },
+  "cleanUrls": true,
+  "trailingSlash": false
 }
