@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import FormularioFactura from './components/FormularioFactura'
 import Dashboard from './components/Dashboard'
 import VerFacturas from './components/VerFacturas'
@@ -186,6 +187,9 @@ function App() {
           onClose={() => hideToast(toast.id)}
         />
       ))}
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   )
 }
