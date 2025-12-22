@@ -46,7 +46,7 @@ export default function Login({ onLoginSuccess }) {
     if (error) {
       setError('Error al enviar el correo de recuperación. Intenta nuevamente.')
     } else {
-      setMensaje('Se ha enviado un correo de recuperación a tu email. Revisa tu bandeja de entrada.')
+      setMensaje('✅ Correo enviado. IMPORTANTE: Revisa tu bandeja de entrada Y la carpeta de SPAM. El correo puede tardar hasta 5 minutos. Si no lo recibes, contacta al administrador del sistema.')
       setMostrarRecuperacion(false)
     }
     
