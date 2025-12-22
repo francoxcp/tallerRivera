@@ -9,7 +9,6 @@ export function ThemeProvider({ children }) {
   })
 
   useEffect(() => {
-    console.log('Dark mode changed to:', darkMode)
     localStorage.setItem('darkMode', JSON.stringify(darkMode))
     
     const root = document.documentElement
@@ -21,7 +20,6 @@ export function ThemeProvider({ children }) {
   }, [darkMode])
 
   const toggleDarkMode = () => {
-    console.log('Toggle dark mode called, current:', darkMode)
     setDarkMode(prev => !prev)
   }
 

@@ -67,7 +67,6 @@ function App() {
   }
 
   const handleToggleTheme = () => {
-    console.log('Toggling theme, current darkMode:', darkMode)
     toggleDarkMode()
   }
 

@@ -1,53 +1,162 @@
 # 🔧 Taller Rivera - Sistema de Gestión de Facturas
 
-Sistema web moderno para gestionar facturas de un taller mecánico, desarrollado con React, Vite y Supabase.
+Sistema web moderno para gestionar facturas de un taller mecánico con seguimiento individual de pagos.
 
-## 📋 Características
+## ✨ Características Principales
 
-- ✅ Registro de facturas con número, precios y detalles
-- 🔍 Búsqueda por número de factura
+### 📋 Gestión de Facturas
+- ✅ Creación de facturas con múltiples servicios y repuestos
+- ✏️ Edición y eliminación de facturas existentes
+- 🔍 Búsqueda por placa del vehículo
 - 🎯 Filtrado por estado de pago (pagado/pendiente)
-- ✏️ Edición y eliminación de facturas
-- 📊 Visualización clara de totales
-- 🎨 Interfaz moderna y responsive con TailwindCSS
+- 💰 Seguimiento individual de pago por servicio y repuesto
+- 📊 Dashboard con estadísticas en tiempo real
 
-## 🛠️ Tecnologías Utilizadas
+### 🎨 Interfaz
+- 🌙 Modo oscuro/claro
+- 📱 Diseño responsive (móvil, tablet, desktop)
+- 🔔 Notificaciones toast para todas las acciones
+- ⚡ Interfaz rápida y moderna
 
-- **Frontend**: React 18 + Vite
-- **Estilos**: TailwindCSCSS
-- **Backend**: Supabase (PostgreSQL + API REST)
-- **Lenguaje**: JavaScript (ES6+)
+### 🔒 Seguridad
+- 🔐 Sistema de autenticación con Supabase Auth
+- 🛡️ Row Level Security (RLS) en base de datos
+- 🔑 Recuperación de contraseña por email
 
-## 📦 Instalación
+## 🛠️ Tecnologías
 
-### 1. Clonar o descargar el proyecto
+- **Frontend**: React 18 + Vite 5
+- **Estilos**: TailwindCSS 3.4 con dark mode
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **Despliegue**: Vercel
+
+## 📦 Instalación Local
+
+### 1. Clonar el repositorio
 
 ```bash
-cd "d:\Visual Studio Code Proyectos\TallerRivera"
+git clone https://github.com/francoxcp/tallerRivera.git
+cd tallerRivera
 ```
 
 ### 2. Instalar dependencias
 
-```powershell
+```bash
 npm install
 ```
 
-### 3. Configurar Supabase
+### 3. Configurar Variables de Entorno
 
-#### Crear cuenta en Supabase:
-1. Ve a [https://supabase.com](https://supabase.com)
-2. Crea una cuenta gratuita
-3. Crea un nuevo proyecto
+Crea un archivo `.env` en la raíz del proyecto:
 
-#### Crear la tabla en Supabase:
-1. En tu proyecto de Supabase, ve a **SQL Editor**
-2. Ejecuta el siguiente script SQL:
+```env
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_anon_key_de_supabase
+```
 
-```sql
--- Crear la tabla de facturas
-CREATE TABLE facturas (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  numero_factura TEXT NOT NULL UNIQUE,
+### 4. Configurar Base de Datos
+
+Ejecuta los siguientes scripts SQL en orden desde el SQL Editor de Supabase:
+
+1. **`supabase-setup.sql`** - Crea las tablas principales
+2. **`supabase-clientes-setup.sql`** - Agrega campos de cliente
+3. **`supabase-add-pagado-column.sql`** - Agrega seguimiento de pago individual
+
+### 5. Ejecutar en desarrollo
+
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`
+
+## 📁 Estructura del Proyecto
+
+```
+TallerRivera/
+├── src/
+│   ├── components/         # Componentes React
+│   │   ├── Dashboard.jsx
+│   │   ├── FormularioFactura.jsx
+│   │   ├── ListaFacturas.jsx
+│   │   ├── VerFacturas.jsx
+│   │   ├── Login.jsx
+│   │   └── Toast.jsx
+│   ├── context/           # Context API
+│   │   ├── AuthContext.jsx
+│   │   └── ThemeContext.jsx
+│   ├── hooks/             # Custom hooks
+│   │   └── useToast.js
+│   ├── services/          # Servicios API
+│   │   ├── supabase.js
+│   │   ├── facturasService.js
+│   │   └── authService.js
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── supabase-setup.sql              # Setup inicial
+├── supabase-clientes-setup.sql     # Campos de cliente
+├── supabase-add-pagado-column.sql  # Seguimiento de pago
+├── DEPLOY-GUIDE.md                 # Guía de despliegue
+├── GUIA-LOGIN.md                   # Guía de autenticación
+├── MIGRACION-PAGADO.md            # Guía de migración
+└── README.md
+```
+
+## 🚀 Despliegue
+
+Ver [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md) para instrucciones detalladas de despliegue en Vercel.
+
+## 📖 Documentación Adicional
+
+- **[GUIA-LOGIN.md](./GUIA-LOGIN.md)** - Configuración del sistema de autenticación
+- **[MIGRACION-PAGADO.md](./MIGRACION-PAGADO.md)** - Migración para seguimiento de pagos
+- **[DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md)** - Guía completa de despliegue
+
+## 🔑 Credenciales de Demo
+
+Ver `CREDENCIALES-ADMIN.md` (archivo local, no versionado)
+
+## 💡 Uso
+
+### Crear una Factura
+1. Click en "Nueva Factura"
+2. Completa los datos del cliente y vehículo
+3. Agrega servicios y repuestos
+4. Marca los items pagados con el checkbox
+5. Guarda la factura
+
+### Editar una Factura
+1. Ve a "Ver Facturas"
+2. Click en "Editar" en la factura deseada
+3. Modifica los datos necesarios
+4. Marca/desmarca items como pagados
+5. Guarda los cambios
+
+### Búsqueda y Filtros
+- Busca por placa del vehículo
+- Filtra por estado: Todas / Pagadas / Pendientes
+- Ve estadísticas en el Dashboard
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/nueva-caracteristica`)
+3. Commit tus cambios (`git commit -m 'Agregar nueva característica'`)
+4. Push a la rama (`git push origin feature/nueva-caracteristica`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👨‍💻 Autor
+
+**Francisco** - [francoxcp](https://github.com/francoxcp)
+
+## 🐛 Reportar Problemas
+
+Si encuentras algún bug o tienes sugerencias, por favor abre un [issue](https://github.com/francoxcp/tallerRivera/issues).
   precio_repuesto DECIMAL(10,2) DEFAULT 0,
   precio_servicio DECIMAL(10,2) DEFAULT 0,
   detalle TEXT,
@@ -68,180 +177,3 @@ ALTER TABLE facturas ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir todas las operaciones en facturas" ON facturas
   FOR ALL
   USING (true)
-  WITH CHECK (true);
-```
-
-#### Obtener las credenciales:
-1. En Supabase, ve a **Settings** → **API**
-2. Copia:
-   - **Project URL** (URL del proyecto)
-   - **anon/public key** (Clave pública)
-
-#### Configurar variables de entorno:
-1. Copia el archivo `.env.example` a `.env`:
-```powershell
-Copy-Item .env.example .env
-```
-
-2. Edita el archivo `.env` y reemplaza con tus credenciales:
-```env
-VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
-VITE_SUPABASE_ANON_KEY=tu-clave-publica-aqui
-```
-
-## 🚀 Ejecutar el proyecto
-
-### Modo desarrollo:
-```powershell
-npm run dev
-```
-
-El proyecto se abrirá automáticamente en [http://localhost:3000](http://localhost:3000)
-
-### Construir para producción:
-```powershell
-npm run build
-```
-
-### Previsualizar build de producción:
-```powershell
-npm run preview
-```
-
-## 📁 Estructura del Proyecto
-
-```
-TallerRivera/
-├── src/
-│   ├── components/          # Componentes React
-│   │   ├── FormularioFactura.jsx   # Formulario de creación/edición
-│   │   └── ListaFacturas.jsx       # Tabla de facturas
-│   ├── services/            # Servicios de API
-│   │   ├── supabase.js             # Cliente de Supabase
-│   │   └── facturasService.js      # CRUD de facturas
-│   ├── App.jsx              # Componente principal
-│   ├── main.jsx             # Punto de entrada
-│   └── index.css            # Estilos globales
-├── public/                  # Archivos estáticos
-├── index.html              # HTML principal
-├── package.json            # Dependencias
-├── vite.config.js          # Configuración de Vite
-├── tailwind.config.js      # Configuración de Tailwind
-└── .env                    # Variables de entorno (no incluir en git)
-```
-
-## 🔌 API de Supabase
-
-### Endpoints disponibles (generados automáticamente):
-
-El servicio `facturasService.js` proporciona los siguientes métodos:
-
-- `obtenerFacturas()` - Obtener todas las facturas
-- `obtenerFacturaPorId(id)` - Obtener una factura específica
-- `crearFactura(factura)` - Crear nueva factura
-- `actualizarFactura(id, datos)` - Actualizar factura existente
-- `eliminarFactura(id)` - Eliminar factura
-- `buscarPorNumero(numero)` - Buscar por número de factura
-- `filtrarPorEstado(estado)` - Filtrar por estado de pago
-
-### Ejemplo de uso:
-
-```javascript
-import { facturasService } from './services/facturasService'
-
-// Crear factura
-const nuevaFactura = await facturasService.crearFactura({
-  numero_factura: 'FAC-001',
-  precio_repuesto: 150.00,
-  precio_servicio: 80.00,
-  detalle: 'Cambio de aceite y filtros',
-  estado_pago: 'pendiente'
-})
-
-// Obtener todas las facturas
-const facturas = await facturasService.obtenerFacturas()
-
-// Actualizar estado
-await facturasService.actualizarFactura(id, {
-  estado_pago: 'pagado'
-})
-```
-
-## 📊 Esquema de la Base de Datos
-
-### Tabla: `facturas`
-
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| id | UUID | ID único (auto-generado) |
-| numero_factura | TEXT | Número de factura (único) |
-| precio_repuesto | DECIMAL | Precio de repuestos |
-| precio_servicio | DECIMAL | Precio del servicio |
-| detalle | TEXT | Descripción del trabajo |
-| estado_pago | TEXT | 'pagado' o 'pendiente' |
-| fecha_creacion | TIMESTAMP | Fecha de creación (auto) |
-
-## 🎨 Características de la Interfaz
-
-- **Diseño Responsive**: Funciona en móviles, tablets y desktop
-- **Formulario Inteligente**: Calcula automáticamente el total
-- **Búsqueda en Tiempo Real**: Busca facturas por número
-- **Filtros Rápidos**: Filtra por estado de pago
-- **Edición In-Place**: Edita facturas con un clic
-- **Confirmación de Eliminación**: Previene borrados accidentales
-
-## 🔒 Seguridad
-
-### Para desarrollo:
-La configuración actual permite todas las operaciones (RLS habilitado con política permisiva).
-
-### Para producción:
-Se recomienda configurar políticas de seguridad más estrictas en Supabase:
-
-```sql
--- Ejemplo: Requiere autenticación
-DROP POLICY "Permitir todas las operaciones en facturas" ON facturas;
-
-CREATE POLICY "Los usuarios autenticados pueden ver facturas" ON facturas
-  FOR SELECT
-  USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Los usuarios autenticados pueden insertar facturas" ON facturas
-  FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
-```
-
-## 📝 Próximas Mejoras Sugeridas
-
-- [ ] Sistema de autenticación de usuarios
-- [ ] Reportes en PDF
-- [ ] Dashboard con estadísticas
-- [ ] Gestión de clientes
-- [ ] Historial de vehículos
-- [ ] Envío de facturas por email
-- [ ] Modo oscuro
-
-## 🆘 Solución de Problemas
-
-### Error: "Faltan las credenciales de Supabase"
-- Verifica que el archivo `.env` exista y tenga las credenciales correctas
-- Asegúrate de que las variables empiecen con `VITE_`
-- Reinicia el servidor de desarrollo después de editar `.env`
-
-### Error al conectar con Supabase
-- Verifica que la URL y la clave sean correctas
-- Comprueba que la tabla `facturas` exista en tu base de datos
-- Revisa que RLS esté configurado correctamente
-
-### La página no carga
-- Verifica que las dependencias estén instaladas: `npm install`
-- Comprueba que el puerto 3000 no esté en uso
-- Revisa la consola del navegador para errores
-
-## 📄 Licencia
-
-Este proyecto es de código abierto y está disponible para uso personal y comercial.
-
-## 👨‍💻 Desarrollo
-
-Desarrollado con ❤️ para Taller Rivera
