@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taller-rivera.vercel.app/sitemap.xml
