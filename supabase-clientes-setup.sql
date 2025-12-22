@@ -9,6 +9,11 @@ ALTER TABLE facturas
 ADD COLUMN IF NOT EXISTS fecha_entrada DATE,
 ADD COLUMN IF NOT EXISTS fecha_salida DATE;
 
+-- IMPORTANTE: Hacer que numero_factura sea opcional (nullable) en facturas
+-- Ya no es necesario en facturas porque se movió a factura_repuestos
+ALTER TABLE facturas 
+ALTER COLUMN numero_factura DROP NOT NULL;
+
 -- Cambiar placa como identificador principal (único)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_facturas_placa_unique ON facturas(placa);
 
