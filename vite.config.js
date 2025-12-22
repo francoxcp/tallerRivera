@@ -10,6 +10,14 @@ export default defineConfig({
   },
   build: {
     sourcemap: false, // Desactiva sourcemaps en producción
+    minify: 'terser', // Minificación agresiva
+    terserOptions: {
+      compress: {
+        drop_console: true, // Elimina console.log en producción
+        drop_debugger: true,
+        pure_funcs: ['console.info', 'console.debug', 'console.warn']
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
@@ -17,6 +25,9 @@ export default defineConfig({
           supabase: ['@supabase/supabase-js']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000, // Aumenta el límite de advertencia
+    cssCodeSplit: true, // Divide CSS en chunks
+    assetsInlineLimit: 4096 // Inline assets pequeños (4kb)
   }
 })
