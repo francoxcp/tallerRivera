@@ -30,3 +30,5 @@ CREDENCIALES-ADMIN.md
 # Environment variables
 .env
 .env.local
+.vercel
+.env*.local

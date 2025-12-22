@@ -10,14 +10,7 @@ export default defineConfig({
   },
   build: {
     sourcemap: false, // Desactiva sourcemaps en producción
-    minify: 'terser', // Minificación agresiva
-    terserOptions: {
-      compress: {
-        drop_console: true, // Elimina console.log en producción
-        drop_debugger: true,
-        pure_funcs: ['console.info', 'console.debug', 'console.warn']
-      }
-    },
+    minify: 'esbuild', // Cambiado de terser a esbuild (más rápido y no requiere dependencia extra)
     rollupOptions: {
       output: {
         manualChunks: {
