@@ -97,9 +97,10 @@ TallerRivera/
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-├── supabase-setup.sql              # Setup inicial
-├── supabase-clientes-setup.sql     # Campos de cliente
-├── supabase-add-pagado-column.sql  # Seguimiento de pago
+├── sql/
+│   ├── supabase-setup.sql              # Setup inicial
+│   ├── supabase-clientes-setup.sql     # Campos de cliente
+│   └── supabase-add-pagado-column.sql  # Seguimiento de pago
 ├── DEPLOY-GUIDE.md                 # Guía de despliegue
 ├── GUIA-LOGIN.md                   # Guía de autenticación
 ├── MIGRACION-PAGADO.md            # Guía de migración
