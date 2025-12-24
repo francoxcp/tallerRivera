@@ -1,74 +1,74 @@
-import { useState, useEffect } from 'react'
-import FormularioFactura from './components/FormularioFactura'
-import Dashboard from './components/Dashboard'
-import VerFacturas from './components/VerFacturas'
-import Login from './components/Login'
-import Toast from './components/Toast'
-import { facturasService } from './services/facturasService'
-import { useAuth } from './context/AuthContext'
-import { useTheme } from './context/ThemeContext'
-import { useToast } from './hooks/useToast'
+import { useState, useEffect } from 'react';
+import FormularioFactura from './components/FormularioFactura';
+import Dashboard from './components/Dashboard';
+import VerFacturas from './components/VerFacturas';
+import Login from './components/Login';
+import Toast from './components/Toast';
+import { facturasService } from './services/facturasService';
+import { useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
+import { useToast } from './hooks/useToast';
 
 function App() {
-  const { user, cargando: cargandoAuth, logout } = useAuth()
-  const { darkMode, toggleDarkMode } = useTheme()
-  const [vistaActual, setVistaActual] = useState('dashboard')
-  const [facturaEditando, setFacturaEditando] = useState(null)
-  const { toasts, hideToast, success, error: showError, warning } = useToast()
+  const { user, cargando: cargandoAuth, logout } = useAuth();
+  const { theme, setTheme, toggleTheme } = useTheme();
+  const [vistaActual, setVistaActual] = useState('dashboard');
+  const [facturaEditando, setFacturaEditando] = useState(null);
+  const { toasts, hideToast, success, error: showError, warning } = useToast();
 
   const handleGuardarFactura = async (factura) => {
     try {
       if (facturaEditando) {
-        await facturasService.actualizarFactura(facturaEditando.id, factura)
-        setFacturaEditando(null)
-        setVistaActual('ver-facturas')
+        await facturasService.actualizarFactura(facturaEditando.id, factura);
+        setFacturaEditando(null);
+        setVistaActual('ver-facturas');
         // Mostrar notificación después del cambio de vista
-        setTimeout(() => success('Factura actualizada exitosamente'), 100)
+        setTimeout(() => success('Factura actualizada exitosamente'), 100);
       } else {
-        await facturasService.crearFactura(factura)
-        setFacturaEditando(null)
-        setVistaActual('ver-facturas')
+        await facturasService.crearFactura(factura);
+        setFacturaEditando(null);
+        setVistaActual('ver-facturas');
         // Mostrar notificación después del cambio de vista
-        setTimeout(() => success('Factura creada exitosamente'), 100)
+        setTimeout(() => success('Factura creada exitosamente'), 100);
       }
     } catch (err) {
-      showError('❌ Error al guardar la factura: ' + err.message)
-      console.error(err)
+      showError('❌ Error al guardar la factura: ' + err.message);
+      console.error(err);
     }
-  }
+  };
 
   const handleEditarFactura = (factura) => {
-    setFacturaEditando(factura)
-    setVistaActual('nueva-factura')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    success(`✏️ Editando factura de la placa: ${factura.placa}`)
-  }
+    setFacturaEditando(factura);
+    setVistaActual('nueva-factura');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    success(`✏️ Editando factura de la placa: ${factura.placa}`);
+  };
 
   const handleCancelarEdicion = () => {
-    setFacturaEditando(null)
-    setVistaActual('dashboard')
-    warning('❌ Edición cancelada')
-  }
+    setFacturaEditando(null);
+    setVistaActual('dashboard');
+    warning('❌ Edición cancelada');
+  };
 
   const handleNavigate = (vista) => {
-    setVistaActual(vista)
-    setFacturaEditando(null)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    setVistaActual(vista);
+    setFacturaEditando(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleLoginSuccess = (usuario) => {
-    success('👋 Bienvenido al sistema')
-  }
+    success('👋 Bienvenido al sistema');
+  };
 
   const handleLogout = async () => {
     if (window.confirm('¿Deseas cerrar sesión?')) {
-      await logout()
+      await logout();
     }
-  }
+  };
 
   const handleToggleTheme = () => {
-    toggleDarkMode()
-  }
+    toggleTheme();
+  };
 
   // Mostrar pantalla de carga
   if (cargandoAuth) {
@@ -79,12 +79,12 @@ function App() {
           <p className="text-gray-600 dark:text-gray-400">Cargando...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Mostrar login si no hay usuario
   if (!user) {
-    return <Login onLoginSuccess={handleLoginSuccess} />
+    return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
@@ -100,13 +100,19 @@ function App() {
               <p className="text-gray-600 dark:text-gray-400">Sistema de Gestión de Facturas</p>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={handleToggleTheme}
-                className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-200"
-                title={darkMode ? 'Modo Claro' : 'Modo Oscuro'}
-              >
-                {darkMode ? '☀️' : '🌙'}
-              </button>
+              <div className="relative">
+                <button
+                  onClick={handleToggleTheme}
+                  className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-200"
+                  title={theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
+                >
+                  {theme === 'dark' ? '☀️' : '🌙'}
+                </button>
+                {/* quick menu to choose explicit theme */}
+                <div className="absolute right-0 mt-10 hidden group-hover:block">
+                  {/* kept hidden by default; can be expanded later if UI needed */}
+                </div>
+              </div>
               <div className="text-right">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Administrador</p>
                 <p className="text-xs text-gray-500 dark:text-gray-500">{user.email}</p>
@@ -157,9 +163,7 @@ function App() {
 
         {/* Contenido dinámico según vista actual */}
         <div className="px-4">
-          {vistaActual === 'dashboard' && (
-            <Dashboard onNavigate={handleNavigate} />
-          )}
+          {vistaActual === 'dashboard' && <Dashboard onNavigate={handleNavigate} />}
 
           {vistaActual === 'nueva-factura' && (
             <FormularioFactura
@@ -169,14 +173,12 @@ function App() {
             />
           )}
 
-          {vistaActual === 'ver-facturas' && (
-            <VerFacturas onEditar={handleEditarFactura} />
-          )}
+          {vistaActual === 'ver-facturas' && <VerFacturas onEditar={handleEditarFactura} />}
         </div>
       </div>
 
       {/* Toast Notifications */}
-      {toasts.map(toast => (
+      {toasts.map((toast) => (
         <Toast
           key={toast.id}
           message={toast.message}
@@ -186,7 +188,7 @@ function App() {
         />
       ))}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

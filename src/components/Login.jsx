@@ -1,57 +1,59 @@
-import { useState } from 'react'
-import { iniciarSesion, recuperarContrasena } from '../services/authService'
+import { useState } from 'react';
+import { iniciarSesion, recuperarContrasena } from '../services/authService';
 
 export default function Login({ onLoginSuccess }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [cargando, setCargando] = useState(false)
-  const [error, setError] = useState('')
-  const [mensaje, setMensaje] = useState('')
-  const [mostrarRecuperacion, setMostrarRecuperacion] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [mostrarRecuperacion, setMostrarRecuperacion] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setError('')
-    setMensaje('')
-    setCargando(true)
+    e.preventDefault();
+    setError('');
+    setMensaje('');
+    setCargando(true);
 
-    const { data, error } = await iniciarSesion(email, password)
+    const { data, error } = await iniciarSesion(email, password);
 
     if (error) {
-      setError('Credenciales incorrectas. Verifica tu email y contraseña.')
-      setCargando(false)
-      return
+      setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+      setCargando(false);
+      return;
     }
 
     if (data?.user) {
-      onLoginSuccess(data.user)
+      onLoginSuccess(data.user);
     }
-    
-    setCargando(false)
-  }
+
+    setCargando(false);
+  };
 
   const handleRecuperacion = async (e) => {
-    e.preventDefault()
-    setError('')
-    setMensaje('')
-    
+    e.preventDefault();
+    setError('');
+    setMensaje('');
+
     if (!email) {
-      setError('Por favor ingresa tu email para recuperar la contraseña')
-      return
+      setError('Por favor ingresa tu email para recuperar la contraseña');
+      return;
     }
 
-    setCargando(true)
-    const { error } = await recuperarContrasena(email)
+    setCargando(true);
+    const { error } = await recuperarContrasena(email);
 
     if (error) {
-      setError('Error al enviar el correo de recuperación. Intenta nuevamente.')
+      setError('Error al enviar el correo de recuperación. Intenta nuevamente.');
     } else {
-      setMensaje('✅ Correo enviado. IMPORTANTE: Revisa tu bandeja de entrada Y la carpeta de SPAM. El correo puede tardar hasta 5 minutos. Si no lo recibes, contacta al administrador del sistema.')
-      setMostrarRecuperacion(false)
+      setMensaje(
+        '✅ Correo enviado. IMPORTANTE: Revisa tu bandeja de entrada Y la carpeta de SPAM. El correo puede tardar hasta 5 minutos. Si no lo recibes, contacta al administrador del sistema.'
+      );
+      setMostrarRecuperacion(false);
     }
-    
-    setCargando(false)
-  }
+
+    setCargando(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center p-4">
@@ -79,9 +81,7 @@ export default function Login({ onLoginSuccess }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contraseña
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
               <input
                 type="password"
                 value={password}
@@ -130,10 +130,8 @@ export default function Login({ onLoginSuccess }) {
               <p className="text-sm text-gray-600 mb-4">
                 Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
               </p>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
+
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
                 value={email}
@@ -163,9 +161,9 @@ export default function Login({ onLoginSuccess }) {
               <button
                 type="button"
                 onClick={() => {
-                  setMostrarRecuperacion(false)
-                  setError('')
-                  setMensaje('')
+                  setMostrarRecuperacion(false);
+                  setError('');
+                  setMensaje('');
                 }}
                 className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-md transition duration-200"
               >
@@ -182,5 +180,5 @@ export default function Login({ onLoginSuccess }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

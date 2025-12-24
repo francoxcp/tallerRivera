@@ -5,6 +5,7 @@ Sistema web moderno para gestionar facturas de un taller mecánico con seguimien
 ## ✨ Características Principales
 
 ### 📋 Gestión de Facturas
+
 - ✅ Creación de facturas con múltiples servicios y repuestos
 - ✏️ Edición y eliminación de facturas existentes
 - 🔍 Búsqueda por placa del vehículo
@@ -13,12 +14,14 @@ Sistema web moderno para gestionar facturas de un taller mecánico con seguimien
 - 📊 Dashboard con estadísticas en tiempo real
 
 ### 🎨 Interfaz
+
 - 🌙 Modo oscuro/claro
 - 📱 Diseño responsive (móvil, tablet, desktop)
 - 🔔 Notificaciones toast para todas las acciones
 - ⚡ Interfaz rápida y moderna
 
 ### 🔒 Seguridad
+
 - 🔐 Sistema de autenticación con Supabase Auth
 - 🛡️ Row Level Security (RLS) en base de datos
 - 🔑 Recuperación de contraseña por email
@@ -120,6 +123,7 @@ Ver `CREDENCIALES-ADMIN.md` (archivo local, no versionado)
 ## 💡 Uso
 
 ### Crear una Factura
+
 1. Click en "Nueva Factura"
 2. Completa los datos del cliente y vehículo
 3. Agrega servicios y repuestos
@@ -127,6 +131,7 @@ Ver `CREDENCIALES-ADMIN.md` (archivo local, no versionado)
 5. Guarda la factura
 
 ### Editar una Factura
+
 1. Ve a "Ver Facturas"
 2. Click en "Editar" en la factura deseada
 3. Modifica los datos necesarios
@@ -134,6 +139,7 @@ Ver `CREDENCIALES-ADMIN.md` (archivo local, no versionado)
 5. Guarda los cambios
 
 ### Búsqueda y Filtros
+
 - Busca por placa del vehículo
 - Filtra por estado: Todas / Pagadas / Pendientes
 - Ve estadísticas en el Dashboard
@@ -157,11 +163,11 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 ## 🐛 Reportar Problemas
 
 Si encuentras algún bug o tienes sugerencias, por favor abre un [issue](https://github.com/francoxcp/tallerRivera/issues).
-  precio_repuesto DECIMAL(10,2) DEFAULT 0,
-  precio_servicio DECIMAL(10,2) DEFAULT 0,
-  detalle TEXT,
-  estado_pago TEXT NOT NULL CHECK (estado_pago IN ('pagado', 'pendiente')),
-  fecha_creacion TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+precio_repuesto DECIMAL(10,2) DEFAULT 0,
+precio_servicio DECIMAL(10,2) DEFAULT 0,
+detalle TEXT,
+estado_pago TEXT NOT NULL CHECK (estado_pago IN ('pagado', 'pendiente')),
+fecha_creacion TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Crear índice para búsquedas más rápidas
@@ -175,5 +181,5 @@ ALTER TABLE facturas ENABLE ROW LEVEL SECURITY;
 -- Crear política para permitir todas las operaciones (desarrollo)
 -- ⚠️ En producción, configura políticas más restrictivas
 CREATE POLICY "Permitir todas las operaciones en facturas" ON facturas
-  FOR ALL
-  USING (true)
+FOR ALL
+USING (true)

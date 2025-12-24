@@ -1,4 +1,4 @@
-import { facturasService } from '../services/facturasService'
+import { facturasService } from '../services/facturasService';
 
 function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
   if (cargando) {
@@ -10,7 +10,7 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
         </div>
         <p className="text-gray-600 dark:text-gray-400 mt-4">Cargando facturas...</p>
       </div>
-    )
+    );
   }
 
   if (facturas.length === 0) {
@@ -30,9 +30,11 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
           />
         </svg>
         <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No hay facturas</h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Comienza creando una nueva factura.</p>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Comienza creando una nueva factura.
+        </p>
       </div>
-    )
+    );
   }
 
   const formatearFecha = (fecha) => {
@@ -41,16 +43,16 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+      minute: '2-digit',
+    });
+  };
 
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat('es-CR', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(valor)
-  }
+      maximumFractionDigits: 2,
+    }).format(valor);
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
@@ -62,10 +64,13 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
 
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {facturas.map((factura) => {
-          const totales = facturasService.calcularTotales(factura)
-          
+          const totales = facturasService.calcularTotales(factura);
+
           return (
-            <div key={factura.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <div
+              key={factura.id}
+              className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
               {/* Header de la factura */}
               <div className="flex justify-between items-start mb-4">
                 <div>
@@ -73,23 +78,46 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
                     🚗 {factura.placa}
                   </h4>
                   <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1 mt-1">
-                    {factura.cliente_nombre && <p><strong>Cliente:</strong> {factura.cliente_nombre}</p>}
-                    {factura.cliente_cedula && <p><strong>Cédula:</strong> {factura.cliente_cedula}</p>}
-                    {factura.vehiculo && <p><strong>Vehículo:</strong> {factura.vehiculo}</p>}
+                    {factura.cliente_nombre && (
+                      <p>
+                        <strong>Cliente:</strong> {factura.cliente_nombre}
+                      </p>
+                    )}
+                    {factura.cliente_cedula && (
+                      <p>
+                        <strong>Cédula:</strong> {factura.cliente_cedula}
+                      </p>
+                    )}
+                    {factura.vehiculo && (
+                      <p>
+                        <strong>Vehículo:</strong> {factura.vehiculo}
+                      </p>
+                    )}
                     <p className="text-xs text-gray-500 dark:text-gray-500">
                       {factura.fecha_creacion ? formatearFecha(factura.fecha_creacion) : '-'}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex flex-col items-end gap-2">
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                    factura.estado_pago === 'pagado'
-                      ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                      : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
-                  }`}>
+                  <span
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      factura.estado_pago === 'pagado'
+                        ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                        : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+                    }`}
+                  >
                     {factura.estado_pago === 'pagado' ? 'Pagado' : 'Pendiente'}
                   </span>
+                  <div className="text-xs mt-1 text-right">
+                    {factura.fecha_salida ? (
+                      <div className="text-green-700 dark:text-green-300">
+                        Crédito cerrado: {formatearFecha(factura.fecha_salida)}
+                      </div>
+                    ) : (
+                      <div className="text-yellow-700 dark:text-yellow-300">Crédito abierto</div>
+                    )}
+                  </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       ₡{formatearMoneda(totales.totalGeneral)}
@@ -102,23 +130,40 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
               {/* Servicios */}
               {factura.factura_servicios && factura.factura_servicios.length > 0 && (
                 <div className="mb-3">
-                  <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Servicios:</h5>
+                  <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Servicios:
+                  </h5>
                   <div className="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg p-3">
                     <ul className="space-y-1 text-sm dark:text-gray-300">
                       {factura.factura_servicios.map((servicio, idx) => (
                         <li key={idx} className="flex justify-between items-center gap-2">
                           <span className="flex-1">
-                            {servicio.descripcion} 
-                            {servicio.cantidad > 1 && <span className="text-gray-600 dark:text-gray-400"> (x{servicio.cantidad})</span>}
+                            {servicio.descripcion}
+                            {servicio.cantidad > 1 && (
+                              <span className="text-gray-600 dark:text-gray-400">
+                                {' '}
+                                (x{servicio.cantidad})
+                              </span>
+                            )}
                           </span>
                           <span className="font-semibold">
                             ₡{formatearMoneda(servicio.precio * servicio.cantidad)}
                           </span>
                           <span className="ml-2">
                             {servicio.pagado ? (
-                              <span className="text-green-600 dark:text-green-400 text-lg" title="Pagado">✓</span>
+                              <span
+                                className="text-green-600 dark:text-green-400 text-lg"
+                                title="Pagado"
+                              >
+                                ✓
+                              </span>
                             ) : (
-                              <span className="text-yellow-600 dark:text-yellow-400 text-lg" title="Pendiente">⏱</span>
+                              <span
+                                className="text-yellow-600 dark:text-yellow-400 text-lg"
+                                title="Pendiente"
+                              >
+                                ⏱
+                              </span>
                             )}
                           </span>
                         </li>
@@ -135,14 +180,21 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
               {/* Repuestos */}
               {factura.factura_repuestos && factura.factura_repuestos.length > 0 && (
                 <div className="mb-3">
-                  <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Repuestos:</h5>
+                  <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Repuestos:
+                  </h5>
                   <div className="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 rounded-lg p-3">
                     <ul className="space-y-1 text-sm dark:text-gray-300">
                       {factura.factura_repuestos.map((repuesto, idx) => (
                         <li key={idx} className="flex justify-between items-start gap-2">
                           <span className="flex-1">
                             {repuesto.nombre}
-                            {repuesto.cantidad > 1 && <span className="text-gray-600 dark:text-gray-400"> (x{repuesto.cantidad})</span>}
+                            {repuesto.cantidad > 1 && (
+                              <span className="text-gray-600 dark:text-gray-400">
+                                {' '}
+                                (x{repuesto.cantidad})
+                              </span>
+                            )}
                             {repuesto.numero_factura && (
                               <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                 Factura: {repuesto.numero_factura}
@@ -154,9 +206,19 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
                           </span>
                           <span>
                             {repuesto.pagado ? (
-                              <span className="text-green-600 dark:text-green-400 text-lg" title="Pagado">✓</span>
+                              <span
+                                className="text-green-600 dark:text-green-400 text-lg"
+                                title="Pagado"
+                              >
+                                ✓
+                              </span>
                             ) : (
-                              <span className="text-yellow-600 dark:text-yellow-400 text-lg" title="Pendiente">⏱</span>
+                              <span
+                                className="text-yellow-600 dark:text-yellow-400 text-lg"
+                                title="Pendiente"
+                              >
+                                ⏱
+                              </span>
                             )}
                           </span>
                         </li>
@@ -189,8 +251,12 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
                 </button>
                 <button
                   onClick={() => {
-                    if (window.confirm(`⚠️ ¿Estás seguro de eliminar la factura de la placa ${factura.placa}?\n\nCliente: ${factura.cliente_nombre || 'Sin nombre'}\nTotal: ₡${formatearMoneda(totales.totalGeneral)}\n\n❌ Esta acción NO se puede deshacer.`)) {
-                      onEliminar(factura.id)
+                    if (
+                      window.confirm(
+                        `⚠️ ¿Estás seguro de eliminar la factura de la placa ${factura.placa}?\n\nCliente: ${factura.cliente_nombre || 'Sin nombre'}\nTotal: ₡${formatearMoneda(totales.totalGeneral)}\n\n❌ Esta acción NO se puede deshacer.`
+                      )
+                    ) {
+                      onEliminar(factura.id);
                     }
                   }}
                   className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-medium transition duration-200"
@@ -199,11 +265,11 @@ function ListaFacturas({ facturas, onEditar, onEliminar, cargando }) {
                 </button>
               </div>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
-export default ListaFacturas
+export default ListaFacturas;

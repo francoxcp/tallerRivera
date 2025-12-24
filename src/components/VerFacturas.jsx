@@ -1,80 +1,84 @@
-import { useState, useEffect } from 'react'
-import ListaFacturas from './ListaFacturas'
-import Toast from './Toast'
-import { facturasService } from '../services/facturasService'
-import { useToast } from '../hooks/useToast'
+import { useState, useEffect } from 'react';
+import ListaFacturas from './ListaFacturas';
+import Toast from './Toast';
+import { facturasService } from '../services/facturasService';
+import { useToast } from '../hooks/useToast';
 
 function VerFacturas({ onEditar }) {
-  const [facturas, setFacturas] = useState([])
-  const [filtroEstado, setFiltroEstado] = useState('todas')
-  const [busqueda, setBusqueda] = useState('')
-  const [cargando, setCargando] = useState(true)
-  const { toasts, hideToast, success, error: showError, warning } = useToast()
+  const [facturas, setFacturas] = useState([]);
+  const [filtroEstado, setFiltroEstado] = useState('todas');
+  const [busqueda, setBusqueda] = useState('');
+  const [cargando, setCargando] = useState(true);
+  const { toasts, hideToast, success, error: showError, warning } = useToast();
 
   useEffect(() => {
-    cargarFacturas()
-  }, [filtroEstado])
+    cargarFacturas();
+  }, [filtroEstado]);
 
   const cargarFacturas = async () => {
     try {
-      setCargando(true)
-      let datos
-      
+      setCargando(true);
+      let datos;
+
       if (filtroEstado === 'todas') {
-        datos = await facturasService.obtenerFacturas()
+        datos = await facturasService.obtenerFacturas();
       } else {
-        datos = await facturasService.filtrarPorEstado(filtroEstado)
+        datos = await facturasService.filtrarPorEstado(filtroEstado);
       }
-      
-      setFacturas(datos)
+
+      setFacturas(datos);
     } catch (err) {
-      showError('❌ Error al cargar las facturas: ' + err.message)
-      console.error(err)
+      showError('❌ Error al cargar las facturas: ' + err.message);
+      console.error(err);
     } finally {
-      setCargando(false)
+      setCargando(false);
     }
-  }
+  };
 
   const handleBuscar = async () => {
     if (busqueda.trim()) {
       try {
-        setCargando(true)
-        const datos = await facturasService.buscarPorPlaca(busqueda)
+        setCargando(true);
+        const datos = await facturasService.buscarPorPlaca(busqueda);
         if (datos.length === 0) {
-          warning('⚠️ No se encontraron facturas con esa placa')
+          warning('⚠️ No se encontraron facturas con esa placa');
         } else {
-          success(`✓ Se encontraron ${datos.length} factura(s)`)
+          success(`✓ Se encontraron ${datos.length} factura(s)`);
         }
-        setFacturas(datos)
+        setFacturas(datos);
       } catch (err) {
-        showError('❌ Error en la búsqueda: ' + err.message)
+        showError('❌ Error en la búsqueda: ' + err.message);
       } finally {
-        setCargando(false)
+        setCargando(false);
       }
     } else {
-      cargarFacturas()
+      cargarFacturas();
     }
-  }
+  };
 
   const handleEliminarFactura = async (id) => {
-    if (window.confirm('¿Estás seguro de eliminar esta factura? Esta acción no se puede deshacer.')) {
+    if (
+      window.confirm('¿Estás seguro de eliminar esta factura? Esta acción no se puede deshacer.')
+    ) {
       try {
-        await facturasService.eliminarFactura(id)
-        success('✅ Factura eliminada exitosamente')
-        await cargarFacturas()
+        await facturasService.eliminarFactura(id);
+        success('✅ Factura eliminada exitosamente');
+        await cargarFacturas();
       } catch (err) {
-        showError('❌ Error al eliminar la factura: ' + err.message)
-        console.error(err)
+        showError('❌ Error al eliminar la factura: ' + err.message);
+        console.error(err);
       }
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Título */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Todas las Facturas</h2>
-        <p className="text-gray-600 dark:text-gray-400">Consulta y gestiona todas las facturas del taller</p>
+        <p className="text-gray-600 dark:text-gray-400">
+          Consulta y gestiona todas las facturas del taller
+        </p>
       </div>
 
       {/* Filtros y búsqueda */}
@@ -102,8 +106,8 @@ function VerFacturas({ onEditar }) {
               {busqueda && (
                 <button
                   onClick={() => {
-                    setBusqueda('')
-                    cargarFacturas()
+                    setBusqueda('');
+                    cargarFacturas();
                   }}
                   className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200"
                 >
@@ -139,7 +143,7 @@ function VerFacturas({ onEditar }) {
       />
 
       {/* Toast Notifications */}
-      {toasts.map(toast => (
+      {toasts.map((toast) => (
         <Toast
           key={toast.id}
           message={toast.message}
@@ -149,7 +153,7 @@ function VerFacturas({ onEditar }) {
         />
       ))}
     </div>
-  )
+  );
 }
 
-export default VerFacturas
+export default VerFacturas;
