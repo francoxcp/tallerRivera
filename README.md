@@ -2,7 +2,7 @@
 
 Aplicación web de gestión de facturas para talleres mecánicos con autenticación segura, CRUD completo y dashboard en tiempo real.
 
-## Características
+## ✨ Características
 
 - **CRUD de Facturas**: Crear, editar, eliminar y visualizar facturas
 - **Búsqueda y Filtrado**: Por placa de vehículo y estado de pago
@@ -12,30 +12,23 @@ Aplicación web de gestión de facturas para talleres mecánicos con autenticaci
 - **Tema Oscuro/Claro**: Interfaz adaptable
 - **Responsive**: Optimizado para móvil, tablet y desktop
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend**: React 18, Vite 5, TailwindCSS 3.4
 - **Backend**: Supabase (PostgreSQL + Auth)
-- **Seguridad**: Row Level Security (RLS)
+- **Seguridad**: Row Level Security (RLS), JWT, Session Timeout
 - **Deployment**: Vercel
 
-## Inicio Rápido
+## 🔒 Seguridad
 
-```bash
-git clone https://github.com/francoxcp/tallerRivera.git
-cd tallerRivera
-npm install
-npm run dev
-```
+✅ **RLS (Row Level Security)** - Cada usuario ve solo sus facturas  
+✅ **Session Timeout** - Logout automático después de 30 minutos  
+✅ **Input Validation** - Protección contra XSS e inyecciones  
+✅ **Rate Limiting** - Previene spam y ataques de fuerza bruta  
+✅ **HTTPS Obligatorio** - Encriptación en tránsito  
+✅ **Content Security Policy** - Headers de seguridad avanzada  
 
-## Características Técnicas
 
-- **Context API** para manejo de estado global (Autenticación y Tema)
-- **Custom Hooks** para lógica reutilizable (notificaciones toast)
-- **Servicios desacoplados** para API calls (Supabase Auth y Facturas)
-- **RLS (Row Level Security)** para seguridad a nivel de base de datos
-- **Dark Mode** integrado con TailwindCSS
-
-## Autor
+```## 👨‍💻 Autor
 
 Franco - [GitHub](https://github.com/francoxcp)

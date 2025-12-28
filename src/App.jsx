@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import VerFacturas from './components/VerFacturas';
 import Login from './components/Login';
 import Toast from './components/Toast';
+import SessionWarning from './components/SessionWarning';
 import { facturasService } from './services/facturasService';
 import { useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
@@ -187,6 +188,9 @@ function App() {
           onClose={() => hideToast(toast.id)}
         />
       ))}
+
+      {/* Session Warning Modal */}
+      <SessionWarning />
     </div>
   );
 }

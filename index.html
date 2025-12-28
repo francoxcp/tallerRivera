@@ -4,11 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta
-      name="description"
-      content="Sistema de gestión de facturas para Taller Rivera - Gestiona servicios, repuestos y pagos de forma eficiente"
-    />
+    <meta name="description" content="Sistema de gestión de facturas para Taller Rivera - Gestiona servicios, repuestos y pagos de forma eficiente" />
     <meta name="theme-color" content="#2563eb" />
+    <!-- Content Security Policy para proteger contra XSS y otros ataques -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'wasm-unsafe-eval';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+      connect-src 'self' https://*.supabase.co https://taller-rivera.vercel.app;
+      font-src 'self';
+      object-src 'none';
+      base-uri 'self';
+      frame-ancestors 'none';
+      form-action 'self'
+    ">
+    <!-- Prevenir clickjacking -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Taller Rivera - Sistema de Gestión</title>
   </head>
   <body>
